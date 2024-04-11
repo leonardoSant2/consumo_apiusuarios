@@ -16,10 +16,33 @@
             <td>{{ user.email }}</td>
             <td v-if="user.role == 0">Usuário</td>
             <td v-if="user.role == 1">Administrador</td>
-            <td><button class="button is-warning">Editar</button>|<button class="button is-danger">Deletar</button></td>
+            <td>
+              <router-link :to="{name: 'UserEdit', params:{id:user.id}}"><button class="button is-warning">Editar</button></router-link>|
+              <button class="button is-danger" @click="showModalUser(user.id)">Deletar</button></td>
           </tr>
         </tbody>
       </table>
+      <div :class="{modal: true, 'is-active': showModal}">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="card">
+  <header class="card-header">
+    <p class="card-header-title" >Você quer realmente deletar este usuário?</p>
+  </header>
+  <div class="card-content">
+    <div class="content">
+     <p>Todos os dados relacionados ao usuário selecionado serão deletados permanentemente!</p>
+    </div>
+  </div>
+  <footer class="card-footer">
+    <a href="#" class="card-footer-item" @click="deleteUser()">Sim</a>
+    <a href="#" class="card-footer-item" @click="hideModal()">Cancelar</a>
+  </footer>
+</div>
+      </div>
+      <button class="modal-close is-large" aria-label="close" @click="hideModal()"></button>
+  </div>
+      
   </div>
 </template>
 
@@ -42,7 +65,33 @@ export default {
   },
   data(){
     return {
-      users: []
+      users: [],
+      showModal: true
+    }
+  },
+  methods: {
+    hideModal(){
+      this.showModal = false;
+    },
+    showModalUser(id){
+      this.deleteUserId = id;
+      this.showModal = true;
+    },
+    deleteUser(){
+      var req = {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('token')
+        }
+      }
+
+      axios.delete("http://localhost:8686/user/"+this.deleteUserId, req).then(res => {
+        console.log(res);
+        this.showModal = false;
+        this.users = this.users.filter(u => u.id != this.deleteUserId);
+      }).catch(err => {
+        console.log(err);
+        this.showModal = false;
+      });
     }
   }
 }
