@@ -30,6 +30,9 @@
         }
         axios.get("http://localhost:8686/user/" + this.$route.params.id, req).then(res => {
             console.log(res);
+            this.name = res.data.name;
+            this.email = res.data.email;
+            this.id = res.data.id;
         }).catch(err => {
             console.log(err.response);
             this.$router.push({name: 'users'});
@@ -39,15 +42,23 @@
       return{
         name: '',
         email: '',
+        id: -1, 
         error: undefined
       }
     },
     methods:{
     edit(){
+      var req = {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('token')
+            }
+        }
+
       axios.put("http://localhost:8686/user", {
         name: this.name,
-        email: this.email
-      }).then(res => {
+        email: this.email,
+        id: this.id
+      },req).then(res => {
         console.log(res);
         this.$router.push({name: 'users'})
       }).catch(err => {
