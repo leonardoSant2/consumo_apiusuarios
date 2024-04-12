@@ -49,7 +49,7 @@ const routes = [
   },
   {
     path: '/admin/users',
-    name: 'Users',
+    name: 'users',
     component: UsersView,
     beforeEnter: adminAuth
     },

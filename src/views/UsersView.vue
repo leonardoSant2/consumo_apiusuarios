@@ -17,7 +17,7 @@
             <td v-if="user.role == 0">Usuário</td>
             <td v-if="user.role == 1">Administrador</td>
             <td>
-              <router-link :to="{name: 'UserEdit', params:{id:user.id}}"><button class="button is-warning">Editar</button></router-link>|
+              <router-link :to="{name: 'userEdit', params:{id:user.id}}"><button class="button is-warning">Editar</button></router-link>|
               <button class="button is-danger" @click="showModalUser(user.id)">Deletar</button></td>
           </tr>
         </tbody>
@@ -66,7 +66,8 @@ export default {
   data(){
     return {
       users: [],
-      showModal: true
+      showModal: false,
+      deleteUserId: -1
     }
   },
   methods: {
